@@ -14,6 +14,7 @@ RUN apk update && apk add sqlite \
     xz \
     ncurses \
     libgomp \
+    gcc \
     tk && \
     pip install -r requirements.txt
 
