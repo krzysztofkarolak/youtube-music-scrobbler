@@ -4,7 +4,7 @@ WORKDIR /data
 COPY requirements.txt .
 COPY start.py .
 
-RUN apk update && apk add sqlite \
+RUN apk update && apk add sqlite-dev \
     openssl \
     zlib \
     ca-certificates \
