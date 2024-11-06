@@ -4,9 +4,6 @@ import os
 import time
 import requests
 import hashlib
-from dotenv import load_dotenv
-
-load_dotenv()
 
 api_head = 'http://ws.audioscrobbler.com/2.0/'
 secret = os.environ['LAST_FM_API_SECRET']
