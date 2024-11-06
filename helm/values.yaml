@@ -1,0 +1,4 @@
+image: ""
+schedule: "* * * * *"
+secretName: "ytmscrobbler-secrets"
+registrySecretName: ""

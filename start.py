@@ -8,10 +8,7 @@ import http.server
 import socketserver
 from ytmusicapi import YTMusic
 import xml.etree.ElementTree as ET
-from dotenv import load_dotenv, set_key
 from datetime import datetime, timedelta
-
-load_dotenv()
 
 class TokenHandler(http.server.SimpleHTTPRequestHandler):
     def do_get_token(self):

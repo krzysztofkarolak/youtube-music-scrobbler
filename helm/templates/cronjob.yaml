@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: youtube-music-scrobbler
+spec:
+  schedule: {{ .Values.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: data-volume
+              persistentVolumeClaim:
+                claimName: youtube-music-scrobbler-data
+
+          containers:
+          - name: youtube-music-scrobbler
+            image: {{ .Values.image }}
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: LAST_FM_API
+                valueFrom:
+                  secretKeyRef:
+                    key: LAST_FM_API
+                    name: {{ .Values.secretName }}
+              - name: LAST_FM_API_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    key: LAST_FM_API_SECRET
+                    name: {{ .Values.secretName }}
+              - name: LASTFM_SESSION
+                valueFrom:
+                  secretKeyRef:
+                    key: LASTFM_SESSION
+                    name: {{ .Values.secretName }}
+            volumeMounts:
+                - name: data-volume
+                  mountPath: /data
+          restartPolicy: OnFailure
+
+          imagePullSecrets:
+            - name: {{ .Values.registrySecretName }}
