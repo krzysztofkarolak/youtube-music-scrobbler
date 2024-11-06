@@ -83,7 +83,7 @@ class Process:
             raise Exception(e)
 
     def execute(self):
-        ytmusic = YTMusic("oauth.json")
+        ytmusic = YTMusic("/data/oauth.json")
 
         if not self.session:
             token = self.get_token()

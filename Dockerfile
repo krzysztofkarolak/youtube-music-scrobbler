@@ -1,7 +1,8 @@
 FROM python:3-alpine
 
-WORKDIR /data
+WORKDIR /app
 COPY requirements.txt .
+COPY lastpy .
 COPY start.py .
 
 RUN apk update && apk add sqlite-dev \
