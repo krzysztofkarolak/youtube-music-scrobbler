@@ -25,10 +25,10 @@ conda activate ytmusic-scrobbler
 5. Run the following command to authenticate with YTMusic:
 
 ```bash
-ytmusicapi oauth
+ytmusicapi browser
 ```
 
-Follow the instructions to complete the authentication. This will create an `oauth.json` file in the current directory.
+Follow the instructions to complete the authentication. This will create an `browser.json` file in the current directory. Place it in the `/data/browser.json` location.
 
 6. Create an API key and API secret for Last.fm by following this link: [Create an API key and API secret for Last.fm](https://www.last.fm/api/account/create).
 
