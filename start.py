@@ -39,7 +39,7 @@ class Process:
 
         self.formatted_date = datetime.now().strftime(
             "%Y-%m-%dT%H:%M:%S.%fZ")
-        self.conn = sqlite3.connect('/data/data.db')
+        self.conn = sqlite3.connect('./data.db')
         cursor = self.conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS scrobbles (
@@ -83,7 +83,7 @@ class Process:
             raise Exception(e)
 
     def execute(self):
-        ytmusic = YTMusic("/data/browser.json")
+        ytmusic = YTMusic("./browser.json")
 
         if not self.session:
             token = self.get_token()
@@ -92,7 +92,7 @@ class Process:
         history = ytmusic.get_history()
         i = 0
         cursor = self.conn.cursor()
-        
+
         # Performing scrobbling of songs, cleaning up local DB if needed first, then adding/updating records to local DB and Last.FM
         # Step 1: Collect all today's scrobbles
         today_records = []
@@ -110,7 +110,7 @@ class Process:
                     continue
                 if record["albumName"] is None:
                     record["albumName"] = record["trackName"]
-                
+
                 today_records.append((record["trackName"], record["artistName"], record["albumName"]))
 
         # Step 2: Delete all records in the database that are not in today's scrobbles
@@ -140,14 +140,14 @@ class Process:
                     continue
                 if record["albumName"] is None:
                     record["albumName"] = record["trackName"]
-                
+
                 scroble = cursor.execute(
                     'SELECT * FROM scrobbles WHERE track_name = :trackName AND artist_name = :artistName AND album_name = :albumName', {
                         "trackName": record["trackName"],
                         "artistName": record["artistName"],
                         "albumName": record["albumName"]
                     }).fetchone()
-                
+
                 if scroble is None:
                     # No existing record, insert a new one
                     cursor.execute('''
@@ -174,7 +174,7 @@ class Process:
                     ''', record)
                     self.conn.commit()
                     continue
-                
+
                 xml_response = lastpy.scrobble(
                     record["trackName"],
                     record["artistName"],
