@@ -39,7 +39,7 @@ class Process:
 
         self.formatted_date = datetime.now().strftime(
             "%Y-%m-%dT%H:%M:%S.%fZ")
-        self.conn = sqlite3.connect('./data.db')
+        self.conn = sqlite3.connect('/data/data.db')
         cursor = self.conn.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS scrobbles (
@@ -83,7 +83,7 @@ class Process:
             raise Exception(e)
 
     def execute(self):
-        ytmusic = YTMusic("./browser.json")
+        ytmusic = YTMusic("/data/browser.json")
 
         if not self.session:
             token = self.get_token()
