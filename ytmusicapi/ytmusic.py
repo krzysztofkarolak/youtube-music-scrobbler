@@ -160,8 +160,7 @@ class YTMusicBase:
             with suppress(locale.Error):
                 locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
-        locale_dir = "/app/ytmusicapi/locales"
-        self.lang = gettext.translation("base", localedir=locale_dir, languages=[language])
+        self.lang = "en"
         self.parser = Parser(self.lang)
 
         if user:
