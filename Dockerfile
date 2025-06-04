@@ -3,7 +3,6 @@ FROM python:3-alpine
 WORKDIR /app
 COPY requirements.txt .
 COPY lastpy ./lastpy
-COPY ytmusicapi ./ytmusicapi
 COPY start.py .
 
 RUN apk update && apk add sqlite-dev \
