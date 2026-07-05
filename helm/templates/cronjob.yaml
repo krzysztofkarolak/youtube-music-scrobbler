@@ -12,6 +12,9 @@ spec:
             - name: data-volume
               persistentVolumeClaim:
                 claimName: youtube-music-scrobbler-data
+            - name: browser-auth-sa
+              secret:
+                secretName: browser-auth-sa
 
           containers:
           - name: youtube-music-scrobbler
@@ -36,6 +39,9 @@ spec:
             volumeMounts:
                 - name: data-volume
                   mountPath: /data
+                - name: browser-auth-sa
+                  mountPath: /auth
+                  readOnly: true
           restartPolicy: OnFailure
 
           imagePullSecrets:

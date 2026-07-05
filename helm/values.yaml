@@ -1,4 +1,5 @@
 image: ""
 schedule: "* * * * *"
 secretName: "ytmscrobbler-secrets"
+storageClass: ""
 registrySecretName: ""

@@ -1,8 +1,8 @@
 # YOUTUBE MUSIC LAST.FM SCROBBLER
 
-The YTMusic Last.fm Scrobbler is a Python script that allows you to fetch your YouTube Music listening history from the last 24 hours and scrobble it to Last.fm.
+The YTMusic Last.fm Scrobbler is a Python script that allows you to fetch your YouTube Music listening history from the last 24 hours and scrobble it to Last.fm. This fork runs on Kubernetes as cronjobs.
 
-## Installation
+## Preparing authorization data
 
 1. Clone or download the repository to your local machine.
 
@@ -28,7 +28,7 @@ conda activate ytmusic-scrobbler
 ytmusicapi browser
 ```
 
-Follow the instructions to complete the authentication. This will create an `browser.json` file in the current directory. Place it in the `/data/browser.json` location.
+Follow the instructions to complete the authentication. This will create an `browser.json` file in the current directory.
 
 6. Create an API key and API secret for Last.fm by following this link: [Create an API key and API secret for Last.fm](https://www.last.fm/api/account/create).
 
@@ -41,7 +41,8 @@ LAST_FM_API_SECRET=YOUR_LASTFM_API_SECRET
 
 Replace `YOUR_LASTFM_API_KEY` with the API key you obtained from Last.fm and `YOUR_LASTFM_API_SECRET` with the corresponding API secret.
 
-8. Run the following command to start scrobbling your YouTube Music history to Last.fm:
+
+8. Run the script for the first time:
 
 ```bash
 python start.py
@@ -53,7 +54,7 @@ The program will begin retrieving your YouTube Music history and scrobbling the 
 
 ### Using SQLite for tracking scrobbled songs
 
-The YTMusic Last.fm Scrobbler uses a SQLite database to keep track of the songs that have already been scrobbled to Last.fm. This prevents the same songs from being repeatedly sent as scrobbles in subsequent runs of the script.
+The YTMusic Last.fm Scrobbler uses a SQLite database on PVC Kubernetes volume to keep track of the songs that have already been scrobbled to Last.fm. This prevents the same songs from being repeatedly sent as scrobbles in subsequent runs of the script.
 
 ## Deploy
 
@@ -61,11 +62,32 @@ To deploy this script, it is important to consider that it requires an authoriza
 
 1. Perform the initial execution of the script in your local environment. This will allow you to complete the authorization flow and establish the necessary sessions.
 
-2. After completing the authorization in your local environment, you will need to manually upload two files to the server where the project is located: `.env` and `oauth.json`. These files contain the required configurations and sessions for subsequent executions.
+2. After completing the authorization in your local environment, you will need to manually create Kubernetes secrets.
 
-3. Once the files are on the server, you can perform executions directly on it. The script will utilize the stored sessions in the loaded files to authorize and carry out its tasks.
+- Place the following values in the `ytmusic-scrobbler` Kubernetes secret:
+```
+LAST_FM_API=YOUR_LASTFM_API_KEY
+LAST_FM_API_SECRET=YOUR_LASTFM_API_SECRET
+LAST_FM_SESSION=YOUR_SESSION_TOKEN
+```
 
-Please note that this approach ensures that subsequent executions can be performed directly on the server without the need to repeat the authorization flow.
+- Place the contents of the generated `browser.json` as the value of `browser-auth-sa` Kubernetes secret. You can use the following manifest template to create that secret:
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: browser-auth-sa
+type: Opaque
+stringData:
+  browser.json: |
+    {
+      (Your browser.json data)
+    }
+```
+
+3. Deploy the helm chart. The script will utilize the stored sessions in the loaded secrets to authorize and carry out its tasks.
+
 
 ## Contributions
 
