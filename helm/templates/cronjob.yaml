@@ -4,10 +4,16 @@ metadata:
   name: youtube-music-scrobbler
 spec:
   schedule: {{ .Values.schedule }}
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      parallelism: 1
+      completions: 1
+      backoffLimit: 2
+      activeDeadlineSeconds: 300
       template:
         spec:
+          restartPolicy: Never
           volumes:
             - name: data-volume
               persistentVolumeClaim:
@@ -42,7 +48,6 @@ spec:
                 - name: browser-auth-sa
                   mountPath: /auth
                   readOnly: true
-          restartPolicy: OnFailure
 
           imagePullSecrets:
             - name: {{ .Values.registrySecretName }}
