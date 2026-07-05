@@ -7,6 +7,10 @@ spec:
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      {{- if .Values.nodeSelector.enabled }}
+      nodeSelector:
+        kubernetes.io/arch: {{ .Values.nodeSelector.arch | quote }}
+      {{- end }}
       parallelism: 1
       completions: 1
       backoffLimit: 2
